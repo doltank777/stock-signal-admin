@@ -62,3 +62,18 @@ export async function deleteSearchCondition(id) {
     `/api/admin/search-conditions/${id}`
   );
 }
+
+export async function getDeletedSearchConditions(signal) {
+  const response = await apiClient.get(
+    '/api/admin/search-conditions/deleted',
+    { signal }
+  );
+
+  return response.data;
+}
+
+export async function restoreSearchCondition(id) {
+  await apiClient.patch(
+    `/api/admin/search-conditions/${id}/restore`
+  );
+}

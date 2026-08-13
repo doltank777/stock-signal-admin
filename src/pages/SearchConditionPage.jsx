@@ -154,15 +154,26 @@ function SearchConditionPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="primary-button"
-          onClick={() =>
-            navigate('/search-conditions/new')
-          }
-        >
-          + 검색식 등록
-        </button>
+        <div className="page-header-actions">
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() =>
+              navigate('/search-conditions/deleted')
+            }
+          >
+            삭제된 검색식
+          </button>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() =>
+              navigate('/search-conditions/new')
+            }
+          >
+            + 검색식 등록
+          </button>
+        </div>
       </div>
 
       <section className="content-card">

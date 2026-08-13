@@ -8,6 +8,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import SearchConditionCreatePage from './pages/SearchConditionCreatePage';
+import DeletedSearchConditionPage from './pages/DeletedSearchConditionPage';
 import SearchConditionPage from './pages/SearchConditionPage';
 
 import { AuthProvider } from './auth/AuthContext';
@@ -50,6 +51,13 @@ function App() {
               path="/search-conditions/new"
               element={
                 <SearchConditionCreatePage />
+              }
+            />
+
+            <Route
+              path="/search-conditions/deleted"
+              element={
+                <DeletedSearchConditionPage />
               }
             />
 
