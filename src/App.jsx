@@ -52,6 +52,13 @@ function App() {
                 <SearchConditionCreatePage />
               }
             />
+
+            <Route
+              path="/search-conditions/:id/edit"
+              element={
+                <SearchConditionCreatePage mode="edit" />
+              }
+            />
           </Route>
         </Route>
 

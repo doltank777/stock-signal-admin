@@ -26,3 +26,21 @@ export async function createSearchCondition(request) {
 
   return response.data;
 }
+
+export async function getSearchCondition(id, signal) {
+  const response = await apiClient.get(
+    `/api/admin/search-conditions/${id}`,
+    { signal }
+  );
+
+  return response.data;
+}
+
+export async function updateSearchCondition(id, request) {
+  const response = await apiClient.put(
+    `/api/admin/search-conditions/${id}`,
+    request
+  );
+
+  return response.data;
+}

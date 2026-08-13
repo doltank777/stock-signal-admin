@@ -139,6 +139,11 @@ function SearchConditionPage() {
                   <button
                     type="button"
                     className="table-action-button"
+                    onClick={() =>
+                      navigate(
+                        `/search-conditions/${condition.id}/edit`
+                      )
+                    }
                   >
                     수정
                   </button>

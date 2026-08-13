@@ -1,8 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import {
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import {
   createSearchCondition,
+  getSearchCondition,
   getSearchConditionMetadata,
+  updateSearchCondition,
 } from '../api/searchConditionApi';
 
 let nextRuleId = 1;
@@ -28,6 +33,31 @@ function createRule(stage, ruleOrder) {
     rightPeriod: '',
     logicalOperator: '',
     ruleOrder,
+  };
+}
+
+function createRuleFromResponse(rule) {
+  return {
+    id: `saved-${rule.id}`,
+    stage: rule.stage,
+    leftMetric: rule.leftMetric,
+    leftPeriod:
+      rule.leftPeriod === null
+        ? ''
+        : String(rule.leftPeriod),
+    operator: rule.operator,
+    rightType: rule.rightType,
+    rightValue:
+      rule.rightValue === null
+        ? ''
+        : String(rule.rightValue),
+    rightMetric: rule.rightMetric || '',
+    rightPeriod:
+      rule.rightPeriod === null
+        ? ''
+        : String(rule.rightPeriod),
+    logicalOperator: rule.logicalOperator || '',
+    ruleOrder: rule.ruleOrder,
   };
 }
 
@@ -510,14 +540,18 @@ function buildRuleRequest(rule, index, metadata) {
   return request;
 }
 
-function SearchConditionCreatePage() {
+function SearchConditionCreatePage({ mode = 'create' }) {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEdit = mode === 'edit';
+  const submittingRef = useRef(false);
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] =
     useState('');
   const [form, setForm] = useState({
     name: '',
+    description: '',
     priority: '0',
     screeningScore: '0',
     realtimeEnabled: false,
@@ -533,21 +567,70 @@ function SearchConditionCreatePage() {
   const [submitting, setSubmitting] =
     useState(false);
   const [screeningRules, setScreeningRules] =
-    useState(() => [createRule('SCREENING', 1)]);
+    useState(() =>
+      isEdit ? [] : [createRule('SCREENING', 1)]
+    );
   const [signalRules, setSignalRules] =
-    useState(() => [createRule('SIGNAL', 1)]);
+    useState(() =>
+      isEdit ? [] : [createRule('SIGNAL', 1)]
+    );
 
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadMetadata() {
+    async function loadPageData() {
       try {
-        const response =
-          await getSearchConditionMetadata(
-            controller.signal
+        if (isEdit) {
+          const [metadataResponse, condition] =
+            await Promise.all([
+              getSearchConditionMetadata(
+                controller.signal
+              ),
+              getSearchCondition(
+                id,
+                controller.signal
+              ),
+            ]);
+
+          const sortedRules = [...condition.rules].sort(
+            (first, second) =>
+              first.ruleOrder - second.ruleOrder
           );
 
-        setMetadata(response);
+          setMetadata(metadataResponse);
+          setForm({
+            name: condition.name,
+            description: condition.description || '',
+            priority: String(condition.priority),
+            screeningScore: String(
+              condition.screeningScore
+            ),
+            realtimeEnabled:
+              condition.realtimeEnabled,
+            enabled: condition.enabled,
+          });
+          setScreeningRules(
+            sortedRules
+              .filter(
+                (rule) => rule.stage === 'SCREENING'
+              )
+              .map(createRuleFromResponse)
+          );
+          setSignalRules(
+            sortedRules
+              .filter(
+                (rule) => rule.stage === 'SIGNAL'
+              )
+              .map(createRuleFromResponse)
+          );
+        } else {
+          const response =
+            await getSearchConditionMetadata(
+              controller.signal
+            );
+
+          setMetadata(response);
+        }
       } catch (error) {
         if (controller.signal.aborted) {
           return;
@@ -558,7 +641,9 @@ function SearchConditionCreatePage() {
 
         setErrorMessage(
           backendMessage ||
-            '검색식 설정 정보를 불러오지 못했습니다.'
+            (isEdit
+              ? '검색식 정보를 불러오지 못했습니다.'
+              : '검색식 설정 정보를 불러오지 못했습니다.')
         );
       } finally {
         if (!controller.signal.aborted) {
@@ -567,10 +652,10 @@ function SearchConditionCreatePage() {
       }
     }
 
-    loadMetadata();
+    loadPageData();
 
     return () => controller.abort();
-  }, []);
+  }, [id, isEdit]);
 
   function updateRules(setRules, ruleId, changes) {
     setRules((currentRules) =>
@@ -617,6 +702,11 @@ function SearchConditionCreatePage() {
     } else if (form.name.trim().length > 100) {
       nextFormErrors.name =
         '검색식명은 100자 이하로 입력해 주세요.';
+    }
+
+    if (form.description.trim().length > 500) {
+      nextFormErrors.description =
+        '검색식 설명은 500자 이하로 입력해 주세요.';
     }
 
     if (!isIntegerInRange(form.priority, 0, 1000)) {
@@ -688,7 +778,10 @@ function SearchConditionCreatePage() {
   }
 
   async function handleSubmit() {
-    if (metadataUnavailable || submitting) {
+    if (
+      metadataUnavailable ||
+      submittingRef.current
+    ) {
       return;
     }
 
@@ -700,7 +793,7 @@ function SearchConditionCreatePage() {
 
     const request = {
       name: form.name.trim(),
-      description: null,
+      description: form.description.trim() || null,
       enabled: form.enabled,
       priority: Number(form.priority),
       screeningScore: Number(form.screeningScore),
@@ -715,10 +808,15 @@ function SearchConditionCreatePage() {
       ],
     };
 
+    submittingRef.current = true;
     setSubmitting(true);
 
     try {
-      await createSearchCondition(request);
+      if (isEdit) {
+        await updateSearchCondition(id, request);
+      } else {
+        await createSearchCondition(request);
+      }
       navigate('/search-conditions');
     } catch (error) {
       const backendMessage =
@@ -726,9 +824,12 @@ function SearchConditionCreatePage() {
 
       setApiError(
         backendMessage ||
-          '검색식 등록에 실패했습니다.'
+          (isEdit
+            ? '검색식 수정에 실패했습니다.'
+            : '검색식 등록에 실패했습니다.')
       );
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   }
@@ -736,13 +837,46 @@ function SearchConditionCreatePage() {
   const metadataUnavailable =
     loading || Boolean(errorMessage);
 
+  if (isEdit && loading) {
+    return (
+      <div className="page-container">
+        <div className="page-state">
+          검색식 정보를 불러오는 중입니다.
+        </div>
+      </div>
+    );
+  }
+
+  if (isEdit && errorMessage) {
+    return (
+      <div className="page-container">
+        <div className="page-state page-state-error">
+          <div role="alert">{errorMessage}</div>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() =>
+              navigate('/search-conditions')
+            }
+          >
+            목록으로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-container">
       <div className="page-header">
         <div>
-          <h1>검색식 등록</h1>
+          <h1>
+            {isEdit ? '검색식 수정' : '검색식 등록'}
+          </h1>
           <p>
-            새로운 종목 검색 조건을 설정합니다.
+            {isEdit
+              ? '기존 종목 검색 조건을 수정합니다.'
+              : '새로운 종목 검색 조건을 설정합니다.'}
           </p>
         </div>
       </div>
@@ -771,6 +905,28 @@ function SearchConditionCreatePage() {
                 {formErrors.name && (
                   <span className="field-error">
                     {formErrors.name}
+                  </span>
+                )}
+              </div>
+              <div className="form-field description-field">
+                <label htmlFor="condition-description">
+                  검색식 설명
+                </label>
+                <textarea
+                  id="condition-description"
+                  maxLength="500"
+                  placeholder="검색식의 목적이나 조건에 대한 설명을 입력해 주세요."
+                  value={form.description}
+                  onChange={(event) =>
+                    updateForm(
+                      'description',
+                      event.target.value
+                    )
+                  }
+                />
+                {formErrors.description && (
+                  <span className="field-error">
+                    {formErrors.description}
                   </span>
                 )}
               </div>
@@ -944,7 +1100,13 @@ function SearchConditionCreatePage() {
           disabled={metadataUnavailable || submitting}
           onClick={handleSubmit}
         >
-          {submitting ? '등록 중...' : '검색식 등록'}
+          {submitting
+            ? isEdit
+              ? '수정 중...'
+              : '등록 중...'
+            : isEdit
+              ? '검색식 수정'
+              : '검색식 등록'}
         </button>
       </div>
     </div>
