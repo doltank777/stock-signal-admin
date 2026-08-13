@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getSearchConditions } from '../api/searchConditionApi';
 
 function SearchConditionPage() {
+  const navigate = useNavigate();
   const [searchConditions, setSearchConditions] =
     useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +57,9 @@ function SearchConditionPage() {
         <button
           type="button"
           className="primary-button"
+          onClick={() =>
+            navigate('/search-conditions/new')
+          }
         >
           + 검색식 등록
         </button>

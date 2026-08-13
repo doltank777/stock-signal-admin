@@ -8,3 +8,12 @@ export async function getSearchConditions(signal) {
 
   return response.data;
 }
+
+export async function getSearchConditionMetadata(signal) {
+  const response = await apiClient.get(
+    '/api/admin/search-conditions/meta',
+    { signal }
+  );
+
+  return response.data;
+}
