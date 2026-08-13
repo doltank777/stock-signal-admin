@@ -1,4 +1,47 @@
+import { useEffect, useState } from 'react';
+import { getSearchConditions } from '../api/searchConditionApi';
+
 function SearchConditionPage() {
+  const [searchConditions, setSearchConditions] =
+    useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] =
+    useState('');
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadSearchConditions() {
+      try {
+        const conditions = await getSearchConditions(
+          controller.signal
+        );
+
+        setSearchConditions(conditions);
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        const backendMessage =
+          error.response?.data?.message;
+
+        setErrorMessage(
+          backendMessage ||
+            '검색식 목록을 불러오지 못했습니다.'
+        );
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadSearchConditions();
+
+    return () => controller.abort();
+  }, []);
+
   return (
     <div className="page-container">
       <div className="page-header">
@@ -21,9 +64,6 @@ function SearchConditionPage() {
         <div className="content-card-header">
           <div>
             <h2>등록 검색식</h2>
-            <p>
-              등록된 검색식 목록이 이곳에 표시됩니다.
-            </p>
           </div>
         </div>
 
@@ -37,9 +77,69 @@ function SearchConditionPage() {
             <div>관리</div>
           </div>
 
-          <div className="empty-table">
-            아직 API를 연결하지 않았습니다.
-          </div>
+          {loading && (
+            <div className="empty-table">
+              검색식 목록을 불러오는 중입니다.
+            </div>
+          )}
+
+          {!loading && errorMessage && (
+            <div
+              className="table-error"
+              role="alert"
+            >
+              {errorMessage}
+            </div>
+          )}
+
+          {!loading &&
+            !errorMessage &&
+            searchConditions.length === 0 && (
+              <div className="empty-table">
+                등록된 검색식이 없습니다.
+              </div>
+            )}
+
+          {!loading &&
+            !errorMessage &&
+            searchConditions.map((condition) => (
+              <div
+                className="table-row"
+                key={condition.id}
+              >
+                <div className="condition-name">
+                  {condition.name}
+                </div>
+                <div>{condition.priority}</div>
+                <div>{condition.screeningScore}</div>
+                <div>
+                  {condition.realtimeEnabled
+                    ? '사용'
+                    : '미사용'}
+                </div>
+                <div>
+                  <span
+                    className={`status-badge ${
+                      condition.enabled
+                        ? 'active'
+                        : 'inactive'
+                    }`}
+                  >
+                    {condition.enabled
+                      ? '활성'
+                      : '비활성'}
+                  </span>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    className="table-action-button"
+                  >
+                    수정
+                  </button>
+                </div>
+              </div>
+            ))}
         </div>
       </section>
     </div>

@@ -377,6 +377,98 @@ button {
   font-weight: 700;
 }
 
+.table-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(220px, 2fr)
+    120px
+    120px
+    140px
+    100px
+    100px;
+
+  align-items: center;
+
+  min-height: 58px;
+
+  padding: 0 24px;
+
+  border-top: 1px solid #edf0f5;
+
+  color: #4b5870;
+  font-size: 13px;
+}
+
+.condition-name {
+  overflow: hidden;
+
+  color: #172033;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 48px;
+  min-height: 26px;
+
+  padding: 0 8px;
+
+  border-radius: 6px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge.active {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+.status-badge.inactive {
+  background: #f1f3f7;
+  color: #68758a;
+}
+
+.table-action-button {
+  min-height: 32px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dce2eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #4b5870;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.table-action-button:hover {
+  border-color: #b9c4d4;
+  background: #f9fafc;
+}
+
+.table-error {
+  margin: 24px;
+  padding: 14px 16px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 13px;
+}
+
 .empty-table,
 .empty-state {
   padding: 60px 24px;
@@ -607,6 +699,18 @@ button {
   }
 
   .table-header {
+    grid-template-columns:
+      minmax(180px, 2fr)
+      100px
+      100px
+      120px
+      80px
+      80px;
+
+    min-width: 760px;
+  }
+
+  .table-row {
     grid-template-columns:
       minmax(180px, 2fr)
       100px
