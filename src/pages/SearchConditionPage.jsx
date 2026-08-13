@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   changeSearchConditionEnabled,
+  deleteSearchCondition,
   getSearchConditions,
 } from '../api/searchConditionApi';
 
@@ -85,6 +86,53 @@ function SearchConditionPage() {
       setStatusError(
         backendMessage ||
           '검색식 상태를 변경하지 못했습니다.'
+      );
+    } finally {
+      pendingIdsRef.current.delete(condition.id);
+      setPendingIds((currentIds) => {
+        const nextIds = new Set(currentIds);
+        nextIds.delete(condition.id);
+        return nextIds;
+      });
+    }
+  }
+
+  async function handleDelete(condition) {
+    if (pendingIdsRef.current.has(condition.id)) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `"${condition.name}" 검색식을 삭제하시겠습니까?\n\n삭제된 검색식은 일반 목록에서 제거됩니다.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    pendingIdsRef.current.add(condition.id);
+    setPendingIds(
+      (currentIds) =>
+        new Set(currentIds).add(condition.id)
+    );
+    setStatusError('');
+
+    try {
+      await deleteSearchCondition(condition.id);
+
+      setSearchConditions((currentConditions) =>
+        currentConditions.filter(
+          (currentCondition) =>
+            currentCondition.id !== condition.id
+        )
+      );
+    } catch (error) {
+      const backendMessage =
+        error.response?.data?.message;
+
+      setStatusError(
+        backendMessage ||
+          '검색식을 삭제하지 못했습니다.'
       );
     } finally {
       pendingIdsRef.current.delete(condition.id);
@@ -214,10 +262,11 @@ function SearchConditionPage() {
                     </span>
                   </button>
                 </div>
-                <div>
+                <div className="table-actions">
                   <button
                     type="button"
                     className="table-action-button"
+                    disabled={pendingIds.has(condition.id)}
                     onClick={() =>
                       navigate(
                         `/search-conditions/${condition.id}/edit`
@@ -225,6 +274,14 @@ function SearchConditionPage() {
                     }
                   >
                     수정
+                  </button>
+                  <button
+                    type="button"
+                    className="table-action-button danger"
+                    disabled={pendingIds.has(condition.id)}
+                    onClick={() => handleDelete(condition)}
+                  >
+                    삭제
                   </button>
                 </div>
               </div>

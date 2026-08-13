@@ -56,3 +56,9 @@ export async function changeSearchConditionEnabled(
 
   return response.data;
 }
+
+export async function deleteSearchCondition(id) {
+  await apiClient.delete(
+    `/api/admin/search-conditions/${id}`
+  );
+}
