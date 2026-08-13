@@ -17,3 +17,12 @@ export async function getSearchConditionMetadata(signal) {
 
   return response.data;
 }
+
+export async function createSearchCondition(request) {
+  const response = await apiClient.post(
+    '/api/admin/search-conditions',
+    request
+  );
+
+  return response.data;
+}

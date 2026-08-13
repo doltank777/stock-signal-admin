@@ -551,6 +551,31 @@ button {
   color: #8b96a8;
 }
 
+.period-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.condition-form-body .period-input input {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+
+.period-input span {
+  flex: 0 0 auto;
+
+  color: #4b5870;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.field-error {
+  color: #b91c1c;
+  font-size: 12px;
+}
+
 .condition-toggle-row {
   display: flex;
   gap: 24px;
@@ -596,6 +621,23 @@ button {
   color: #b91c1c;
 
   font-size: 13px;
+}
+
+.section-error,
+.submit-error {
+  padding: 12px 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 13px;
+}
+
+.submit-error {
+  margin-top: 20px;
 }
 
 .rule-list {
