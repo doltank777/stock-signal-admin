@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getSearchConditions } from '../api/searchConditionApi';
+import {
+  changeSearchConditionEnabled,
+  getSearchConditions,
+} from '../api/searchConditionApi';
 
 function SearchConditionPage() {
   const navigate = useNavigate();
@@ -9,6 +12,11 @@ function SearchConditionPage() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] =
     useState('');
+  const [statusError, setStatusError] =
+    useState('');
+  const [pendingIds, setPendingIds] =
+    useState(() => new Set());
+  const pendingIdsRef = useRef(new Set());
 
   useEffect(() => {
     const controller = new AbortController();
@@ -44,6 +52,50 @@ function SearchConditionPage() {
     return () => controller.abort();
   }, []);
 
+  async function handleEnabledChange(condition) {
+    if (pendingIdsRef.current.has(condition.id)) {
+      return;
+    }
+
+    pendingIdsRef.current.add(condition.id);
+    setPendingIds(
+      (currentIds) =>
+        new Set(currentIds).add(condition.id)
+    );
+    setStatusError('');
+
+    try {
+      const updatedCondition =
+        await changeSearchConditionEnabled(
+          condition.id,
+          !condition.enabled
+        );
+
+      setSearchConditions((currentConditions) =>
+        currentConditions.map((currentCondition) =>
+          currentCondition.id === updatedCondition.id
+            ? updatedCondition
+            : currentCondition
+        )
+      );
+    } catch (error) {
+      const backendMessage =
+        error.response?.data?.message;
+
+      setStatusError(
+        backendMessage ||
+          '검색식 상태를 변경하지 못했습니다.'
+      );
+    } finally {
+      pendingIdsRef.current.delete(condition.id);
+      setPendingIds((currentIds) => {
+        const nextIds = new Set(currentIds);
+        nextIds.delete(condition.id);
+        return nextIds;
+      });
+    }
+  }
+
   return (
     <div className="page-container">
       <div className="page-header">
@@ -73,6 +125,15 @@ function SearchConditionPage() {
         </div>
 
         <div className="search-condition-table">
+          {statusError && (
+            <div
+              className="table-error"
+              role="alert"
+            >
+              {statusError}
+            </div>
+          )}
+
           <div className="table-header">
             <div>검색식명</div>
             <div>우선순위</div>
@@ -123,17 +184,35 @@ function SearchConditionPage() {
                     : '미사용'}
                 </div>
                 <div>
-                  <span
-                    className={`status-badge ${
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={condition.enabled}
+                    aria-label={`${condition.name} ${
                       condition.enabled
-                        ? 'active'
-                        : 'inactive'
+                        ? '비활성화'
+                        : '활성화'
                     }`}
+                    className={`status-toggle ${
+                      condition.enabled ? 'active' : ''
+                    }`}
+                    disabled={pendingIds.has(condition.id)}
+                    onClick={() =>
+                      handleEnabledChange(condition)
+                    }
                   >
-                    {condition.enabled
-                      ? '활성'
-                      : '비활성'}
-                  </span>
+                    <span
+                      className="status-toggle-track"
+                      aria-hidden="true"
+                    >
+                      <span className="status-toggle-knob" />
+                    </span>
+                    <span className="status-toggle-label">
+                      {condition.enabled
+                        ? '활성'
+                        : '비활성'}
+                    </span>
+                  </button>
                 </div>
                 <div>
                   <button

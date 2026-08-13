@@ -44,3 +44,15 @@ export async function updateSearchCondition(id, request) {
 
   return response.data;
 }
+
+export async function changeSearchConditionEnabled(
+  id,
+  enabled
+) {
+  const response = await apiClient.patch(
+    `/api/admin/search-conditions/${id}/enabled`,
+    { enabled }
+  );
+
+  return response.data;
+}
