@@ -574,21 +574,19 @@ button {
   margin: 0;
 }
 
-.condition-field-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
 .metadata-message {
-  margin-bottom: 18px;
+  padding: 16px 18px;
+
+  border: 1px solid #dce2eb;
+  border-radius: 8px;
+
+  background: #ffffff;
 
   color: #78859a;
   font-size: 13px;
 }
 
 .metadata-error {
-  margin-bottom: 18px;
   padding: 12px 14px;
 
   border: 1px solid #fecaca;
@@ -598,6 +596,90 @@ button {
   color: #b91c1c;
 
   font-size: 13px;
+}
+
+.rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rule-editor {
+  padding: 18px;
+
+  border: 1px solid #e1e6ee;
+  border-radius: 8px;
+
+  background: #f9fafc;
+}
+
+.rule-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 16px;
+
+  color: #354056;
+  font-size: 14px;
+}
+
+.rule-delete-button {
+  min-width: 52px;
+  min-height: 32px;
+
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #b91c1c;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.rule-delete-button:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.rule-delete-button:disabled,
+.add-rule-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.rule-field-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.logical-connector {
+  width: 180px;
+
+  margin: -2px 0 16px;
+}
+
+.add-rule-button {
+  min-height: 38px;
+
+  margin-top: 16px;
+  padding: 0 14px;
+
+  border: 1px solid #b9c8e2;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #2557a7;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.add-rule-button:hover:not(:disabled) {
+  border-color: #8da7d2;
+  background: #f5f8fd;
 }
 
 .condition-form-actions {
@@ -828,8 +910,12 @@ button {
   }
 
   .basic-info-grid,
-  .condition-field-grid {
+  .rule-field-grid {
     grid-template-columns: 1fr;
+  }
+
+  .logical-connector {
+    width: 100%;
   }
 
   .table-header {
