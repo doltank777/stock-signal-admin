@@ -10,6 +10,8 @@ import LoginPage from './pages/LoginPage';
 import SearchConditionCreatePage from './pages/SearchConditionCreatePage';
 import DeletedSearchConditionPage from './pages/DeletedSearchConditionPage';
 import SearchConditionPage from './pages/SearchConditionPage';
+import UserDetailPage from './pages/UserDetailPage';
+import UserManagementPage from './pages/UserManagementPage';
 
 import { AuthProvider } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -38,6 +40,16 @@ function App() {
             <Route
               path="/dashboard"
               element={<DashboardPage />}
+            />
+
+            <Route
+              path="/users"
+              element={<UserManagementPage />}
+            />
+
+            <Route
+              path="/users/:id"
+              element={<UserDetailPage />}
             />
 
             <Route

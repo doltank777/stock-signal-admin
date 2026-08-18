@@ -52,6 +52,21 @@ function Sidebar() {
         </NavLink>
 
         <NavLink
+          to="/users"
+          className={({ isActive }) =>
+            `sidebar-menu-item ${
+              isActive ? 'active' : ''
+            }`
+          }
+        >
+          <span className="sidebar-menu-icon">
+            ◎
+          </span>
+
+          회원 관리
+        </NavLink>
+
+        <NavLink
           to="/search-conditions"
           className={({ isActive }) =>
             `sidebar-menu-item ${

@@ -851,6 +851,243 @@ button {
   margin-top: 24px;
 }
 
+/* User management */
+
+.user-filter-card {
+  margin-bottom: 20px;
+  padding: 20px 24px;
+}
+
+.user-filter-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.user-search-field {
+  flex: 1;
+}
+
+.user-membership-filter {
+  width: 180px;
+}
+
+.user-filter-form input,
+.user-filter-form select,
+.membership-form input,
+.membership-form select {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dce2eb;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #172033;
+}
+
+.user-filter-form input:focus,
+.user-filter-form select:focus,
+.membership-form input:focus,
+.membership-form select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.user-search-button {
+  min-width: 76px;
+  height: 42px;
+}
+
+.user-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.user-table-header,
+.user-table-row {
+  min-width: 1080px;
+  display: grid;
+  grid-template-columns:
+    70px
+    minmax(210px, 1.8fr)
+    minmax(130px, 1fr)
+    110px
+    100px
+    80px
+    170px
+    80px;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.user-table-header {
+  min-height: 48px;
+  background: #f9fafc;
+  color: #778398;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.user-table-row {
+  min-height: 58px;
+  border-top: 1px solid #edf0f5;
+  color: #4b5870;
+  font-size: 13px;
+}
+
+.user-email {
+  overflow: hidden;
+  color: #172033;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.membership-badge {
+  display: inline-flex;
+  min-height: 25px;
+  align-items: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: #59677c;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.membership-badge.paid_scheduled {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.membership-badge.paid_active {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+.membership-badge.paid_expired {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-top: 1px solid #edf0f5;
+  color: #59677c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.user-detail-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 8px 24px 24px;
+}
+
+.user-detail-grid > div {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.user-detail-grid dt {
+  color: #778398;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.user-detail-grid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.membership-form {
+  padding: 24px;
+}
+
+.membership-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.membership-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px;
+  border: 1px solid #e5eaf2;
+  border-radius: 9px;
+  background: #f9fafc;
+}
+
+.membership-summary span {
+  color: #778398;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.membership-summary strong {
+  color: #172033;
+  font-size: 14px;
+}
+
+.membership-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.membership-warning {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 13px;
+}
+
+.submit-success {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 13px;
+}
+
+.membership-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
 /* Login */
 
 .login-page {
@@ -1071,8 +1308,20 @@ button {
   }
 
   .basic-info-grid,
-  .rule-field-grid {
+  .rule-field-grid,
+  .user-detail-grid,
+  .membership-summary,
+  .membership-form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .user-filter-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .user-membership-filter {
+    width: 100%;
   }
 
   .logical-connector {
