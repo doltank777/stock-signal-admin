@@ -20,6 +20,24 @@ const OPERATOR_SYMBOLS = {
   EQUAL: '=',
 };
 
+function HelpTooltip({ label, children }) {
+  return (
+    <span className="help-tooltip">
+      <button
+        type="button"
+        className="help-tooltip-trigger"
+        aria-label={`${label} 도움말`}
+        aria-describedby={`${label}-help`}
+      >
+        ?
+      </button>
+      <span id={`${label}-help`} className="help-tooltip-content" role="tooltip">
+        {children}
+      </span>
+    </span>
+  );
+}
+
 function createRule(stage, ruleOrder) {
   return {
     id: nextRuleId++,
@@ -718,7 +736,7 @@ function SearchConditionCreatePage({ mode = 'create' }) {
       !isIntegerInRange(form.screeningScore, 0, 100)
     ) {
       nextFormErrors.screeningScore =
-        '후보 점수는 0 이상 100 이하의 정수로 입력해 주세요.';
+        '후보 감시 점수는 0 이상 100 이하의 정수로 입력해 주세요.';
     }
 
     if (screeningRules.length === 0) {
@@ -931,8 +949,13 @@ function SearchConditionCreatePage({ mode = 'create' }) {
                 )}
               </div>
               <div className="form-field">
-                <label htmlFor="priority">
-                  우선순위
+                <label htmlFor="priority" className="label-with-help">
+                  검색식 우선순위
+                  <HelpTooltip label="priority">
+                    여러 검색식의 후보 종목 중 실시간 감시 대상을 선정할 때 사용합니다.<br />
+                    숫자가 높을수록 우선적으로 고려됩니다.<br />
+                    입력 범위: 0 ~ 1000
+                  </HelpTooltip>
                 </label>
                 <input
                   id="priority"
@@ -954,8 +977,13 @@ function SearchConditionCreatePage({ mode = 'create' }) {
                 )}
               </div>
               <div className="form-field">
-                <label htmlFor="screening-score">
-                  후보 점수
+                <label htmlFor="screening-score" className="label-with-help">
+                  후보 감시 점수
+                  <HelpTooltip label="screening-score">
+                    검색식에 일치한 후보 종목의 실시간 감시 우선도를 결정할 때 사용하는 설정값입니다.<br />
+                    동일하거나 유사한 검색식 우선순위의 후보를 비교할 때 숫자가 높을수록 먼저 고려됩니다.<br />
+                    입력 범위: 0 ~ 100
+                  </HelpTooltip>
                 </label>
                 <input
                   id="screening-score"
@@ -978,8 +1006,10 @@ function SearchConditionCreatePage({ mode = 'create' }) {
               </div>
             </div>
             <div className="condition-toggle-row">
-              <label className="checkbox-field">
-                <input
+              <div className="realtime-toggle-field">
+                <div className="realtime-toggle-label">
+                  <label className="checkbox-field">
+                    <input
                   type="checkbox"
                   checked={form.realtimeEnabled}
                   onChange={(event) =>
@@ -988,9 +1018,18 @@ function SearchConditionCreatePage({ mode = 'create' }) {
                       event.target.checked
                     )
                   }
-                />
-                <span>실시간 감시</span>
-              </label>
+                    />
+                    <span>실시간 감시 사용</span>
+                  </label>
+                  <HelpTooltip label="realtime-enabled">
+                    이 검색식의 SCREENING 조건을 통과한 종목을 KIS WebSocket 실시간 감시 후보로 사용합니다.<br />
+                    전체 검색식의 후보에서 동일 종목은 하나로 합산하며, 확정 운영 정책은 단일 세션에서 최대 40종목입니다.
+                  </HelpTooltip>
+                </div>
+                <p className="realtime-watch-note">
+                  전체 검색식의 실시간 후보를 합산하여 최대 40개 종목까지 동시 감시합니다. 같은 종목이 여러 검색식에 포함되어도 1종목으로 계산됩니다.
+                </p>
+              </div>
               <label className="checkbox-field">
                 <input
                   type="checkbox"
