@@ -524,6 +524,219 @@ button {
   font-size: 12px;
 }
 
+/* Operational realtime observability */
+
+.operational-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.operational-page .page-header,
+.operational-page .table-error {
+  margin-bottom: 0;
+}
+
+.operational-page-header {
+  align-items: flex-start;
+}
+
+.operational-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summary-card-status,
+.summary-card-state {
+  margin-top: 16px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.summary-card-state.success {
+  color: #15803d;
+}
+
+.summary-card-state.warning {
+  color: #b45309;
+}
+
+.operational-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #f1f3f7;
+  color: #59677c;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.operational-badge.success {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+.operational-badge.progress {
+  background: #eef4ff;
+  color: #2557a7;
+}
+
+.operational-badge.warning {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+.operational-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.operational-detail-card {
+  min-width: 0;
+}
+
+.operational-detail-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  padding: 12px 24px 18px;
+}
+
+.operational-key-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  border-bottom: 1px solid #f1f3f7;
+  color: #778398;
+  font-size: 12px;
+}
+
+.operational-key-value strong {
+  color: #28354b;
+  text-align: right;
+}
+
+.operational-inline-empty,
+.operational-inline-warning {
+  margin: 0 24px 20px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #78859a;
+  font-size: 12px;
+}
+
+.operational-inline-warning {
+  border: 1px solid #fed7aa;
+  background: #fff7ed;
+  color: #9a4d0b;
+}
+
+.operational-notice {
+  padding: 13px 16px;
+  border: 1px solid #bbf7d0;
+  border-radius: 9px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.operational-notice.warning {
+  border-color: #fed7aa;
+  background: #fff7ed;
+  color: #9a4d0b;
+}
+
+.operational-diagnostics-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px 24px;
+}
+
+.operational-diagnostic-item,
+.operational-failure {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  color: #59677c;
+  font-size: 12px;
+}
+
+.operational-code-list,
+.operational-condition-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.operational-code-list code,
+.operational-condition-list span {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #f1f3f7;
+  color: #4b5870;
+  font-size: 11px;
+}
+
+.operational-failure {
+  padding: 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.operational-table-wrap {
+  overflow-x: auto;
+}
+
+.operational-table {
+  width: 100%;
+  min-width: 880px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.operational-table th,
+.operational-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #edf0f5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.operational-table th {
+  background: #f9fafc;
+  color: #778398;
+  font-size: 11px;
+}
+
+.operational-table td {
+  color: #59677c;
+}
+
+.operational-table td strong,
+.operational-table td > span {
+  display: block;
+}
+
+.operational-table td > span:not(.market-badge) {
+  margin-top: 4px;
+  color: #8b96a8;
+  font-size: 11px;
+}
+
 .table-row {
   display: grid;
 
@@ -1478,6 +1691,10 @@ button {
   .screening-condition-grid {
     grid-template-columns: 1fr;
   }
+
+  .operational-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 760px) {
@@ -1494,6 +1711,19 @@ button {
   }
 
   .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .operational-page-header,
+  .operational-page-header .page-header-actions {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .operational-summary-grid,
+  .operational-section-grid,
+  .operational-detail-body {
     grid-template-columns: 1fr;
   }
 

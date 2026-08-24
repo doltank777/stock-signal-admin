@@ -80,6 +80,21 @@ function Sidebar() {
 
           검색식 관리
         </NavLink>
+
+        <NavLink
+          to="/operational-realtime"
+          className={({ isActive }) =>
+            `sidebar-menu-item ${
+              isActive ? 'active' : ''
+            }`
+          }
+        >
+          <span className="sidebar-menu-icon">
+            ◉
+          </span>
+
+          운영 실시간 감시
+        </NavLink>
       </nav>
 
       <div className="sidebar-account">

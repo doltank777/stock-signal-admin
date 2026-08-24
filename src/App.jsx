@@ -7,6 +7,7 @@ import {
 import AdminLayout from './components/layout/AdminLayout';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
+import OperationalRealtimePage from './pages/OperationalRealtimePage';
 import SearchConditionCreatePage from './pages/SearchConditionCreatePage';
 import DeletedSearchConditionPage from './pages/DeletedSearchConditionPage';
 import SearchConditionPage from './pages/SearchConditionPage';
@@ -40,6 +41,11 @@ function App() {
             <Route
               path="/dashboard"
               element={<DashboardPage />}
+            />
+
+            <Route
+              path="/operational-realtime"
+              element={<OperationalRealtimePage />}
             />
 
             <Route
