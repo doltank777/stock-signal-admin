@@ -86,16 +86,18 @@ function OperationalRealtimePage() {
   const [actionMessage, setActionMessage] = useState(null);
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
   const requestRef = useRef(null);
+  const hasStatusRef = useRef(false);
 
   const loadStatus = useCallback(async () => {
     if (requestRef.current) return;
     const controller = new AbortController();
     requestRef.current = controller;
-    if (!status) setLoading(true);
+    if (!hasStatusRef.current) setLoading(true);
     setRefreshing(true);
     setError('');
     try {
       const result = await getOperationalRealtimeStatus(controller.signal);
+      hasStatusRef.current = true;
       setStatus(result);
       setLastUpdatedAt(new Date());
     } catch (requestError) {
@@ -108,7 +110,7 @@ function OperationalRealtimePage() {
         setRefreshing(false);
       }
     }
-  }, [status]);
+  }, []);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(loadStatus, 0);
