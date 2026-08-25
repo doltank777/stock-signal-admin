@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import {
   getAdminUser,
   updateAdminUserMembership,
@@ -25,6 +29,7 @@ const ROLE_LABELS = {
 function UserDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
   const [membershipType, setMembershipType] = useState('FREE');
   const [startedAt, setStartedAt] = useState('');
@@ -33,7 +38,9 @@ function UserDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [formError, setFormError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(
+    location.state?.successMessage || ''
+  );
 
   const applyUser = useCallback((data) => {
     setUser(data);

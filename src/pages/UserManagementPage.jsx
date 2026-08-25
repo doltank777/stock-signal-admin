@@ -95,6 +95,13 @@ function UserManagementPage() {
           <h1>회원 관리</h1>
           <p>회원 등급과 서비스 이용 상태를 관리합니다.</p>
         </div>
+        <button
+          type="button"
+          className="primary-button"
+          onClick={() => navigate('/users/new')}
+        >
+          회원 등록
+        </button>
       </div>
 
       <section className="content-card user-filter-card">

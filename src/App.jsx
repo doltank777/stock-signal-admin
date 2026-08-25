@@ -12,6 +12,7 @@ import SearchConditionCreatePage from './pages/SearchConditionCreatePage';
 import DeletedSearchConditionPage from './pages/DeletedSearchConditionPage';
 import SearchConditionPage from './pages/SearchConditionPage';
 import UserDetailPage from './pages/UserDetailPage';
+import UserCreatePage from './pages/UserCreatePage';
 import UserManagementPage from './pages/UserManagementPage';
 
 import { AuthProvider } from './auth/AuthContext';
@@ -56,6 +57,11 @@ function App() {
             <Route
               path="/users/:id"
               element={<UserDetailPage />}
+            />
+
+            <Route
+              path="/users/new"
+              element={<UserCreatePage />}
             />
 
             <Route

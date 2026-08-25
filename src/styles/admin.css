@@ -1487,6 +1487,54 @@ button {
   margin-top: 22px;
 }
 
+.user-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-create-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 24px;
+}
+
+.user-create-membership-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.user-create-grid input,
+.user-create-grid select,
+.user-create-phone-field input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dce2eb;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: #172033;
+}
+
+.user-create-grid input:focus,
+.user-create-grid select:focus,
+.user-create-phone-field input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.user-create-phone-field {
+  max-width: 720px;
+  padding: 24px;
+}
+
+.user-create-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 /* Login */
 
 .login-page {
@@ -1731,7 +1779,9 @@ button {
   .rule-field-grid,
   .user-detail-grid,
   .membership-summary,
-  .membership-form-grid {
+  .membership-form-grid,
+  .user-create-grid,
+  .user-create-membership-grid {
     grid-template-columns: 1fr;
   }
 

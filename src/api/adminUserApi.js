@@ -9,6 +9,12 @@ export async function getAdminUsers(params, signal) {
   return response.data;
 }
 
+export async function createAdminUser(request) {
+  const response = await apiClient.post('/api/admin/users', request);
+
+  return response.data;
+}
+
 export async function getAdminUser(id, signal) {
   const response = await apiClient.get(
     `/api/admin/users/${id}`,
